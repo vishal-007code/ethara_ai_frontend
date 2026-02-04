@@ -16,6 +16,13 @@ function App() {
   const [notification, setNotification] = useState(null);
   const [attendanceRefreshKey, setAttendanceRefreshKey] = useState(0);
 
+  const showNotification = useCallback((message, type = "success") => {
+    setNotification({ message, type });
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000);
+  }, []);
+
   const loadEmployees = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -30,18 +37,11 @@ function App() {
     } finally {
       setLoading(false);
     }
-  }, [employeesAPI]);
+  }, [showNotification]);
 
   useEffect(() => {
     loadEmployees();
   }, [loadEmployees]);
-
-  const showNotification = (message, type = "success") => {
-    setNotification({ message, type });
-    setTimeout(() => {
-      setNotification(null);
-    }, 3000);
-  };
 
   const handleAddEmployee = async (employeeData) => {
     const response = await employeesAPI.create(employeeData);
