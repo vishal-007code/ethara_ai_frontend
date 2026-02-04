@@ -155,15 +155,17 @@ api.interceptors.response.use(
 
 // Employees API
 export const employeesAPI = {
-  getAll: () => api.get('/api/employees'),
+  // Use trailing slash to avoid 307 redirects which can drop bodies in some clients.
+  getAll: () => api.get('/api/employees/'),
   getById: (id) => api.get(`/api/employees/${id}`),
-  create: (employee) => api.post('/api/employees', employee),
+  create: (employee) => api.post('/api/employees/', employee),
   delete: (id) => api.delete(`/api/employees/${id}`),
 };
 
 // Attendance API
 export const attendanceAPI = {
-  getAll: (params) => api.get('/api/attendance', { params }),
+  // Use trailing slash to avoid 307 redirects which can drop bodies in some clients.
+  getAll: (params) => api.get('/api/attendance/', { params }),
   getByEmployeeId: (employeeId) => api.get(`/api/attendance/employee/${employeeId}`),
   create: (attendance) => {
     // Ensure backend receives a stable payload shape even if callers pass partial data.
@@ -172,7 +174,7 @@ export const attendanceAPI = {
       date: attendance?.date,
       status: attendance?.status || 'Present',
     };
-    return api.post('/api/attendance', payload);
+    return api.post('/api/attendance/', payload);
   },
   getStats: (employeeId) => api.get(`/api/attendance/stats/${employeeId}`),
 };
